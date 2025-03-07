@@ -15,26 +15,26 @@ from copy import deepcopy
 
 def main():
     # Read Video
-    input_video_path = r"F:\tennis project\tennis_analysis-main\input_videos\input_video.mp4"
+    input_video_path = r"./input_videos/input_video.mp4"
     video_frames = read_video(input_video_path)
 
     # Detect Players and Ball
-    player_tracker = PlayerTracker(model_path=r'F:\tennis project\tennis_analysis-main\models\yolov8x.pt')
-    ball_tracker = BallTracker(model_path=r'F:\tennis project\tennis_analysis-main\models\yolo5_last.pt')
+    player_tracker = PlayerTracker(model_path=r'./models/yolov8x.pt')
+    ball_tracker = BallTracker(model_path=r'./models/yolo5_last.pt')
 
     player_detections = player_tracker.detect_frames(video_frames,
                                                      read_from_stub=True,
-                                                     stub_path=r"F:\tennis project\tennis_analysis-main\tracker_stubs\player_detections.pkl"
+                                                     stub_path=r"./tracker_stubs/player_detections.pkl"
                                                      )
     ball_detections = ball_tracker.detect_frames(video_frames,
                                                      read_from_stub=True,
-                                                     stub_path=r"F:\tennis project\tennis_analysis-main\tracker_stubs\ball_detections.pkl"
+                                                     stub_path=r"./tracker_stubs/ball_detections.pkl"
                                                      )
     ball_detections = ball_tracker.interpolate_ball_positions(ball_detections)
     
     
     # Court Line Detector model
-    court_model_path = r"F:\tennis project\tennis_analysis-main\models\keypoints_model.pth"
+    court_model_path = r"./models/keypoints_model.pth"
     court_line_detector = CourtLineDetector(court_model_path)
     court_keypoints = court_line_detector.predict(video_frames[0])
 
@@ -142,7 +142,7 @@ def main():
     for i, frame in enumerate(output_video_frames):
         cv2.putText(frame, f"Frame: {i}",(10,30),cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-    save_video(output_video_frames, "output_videos/output_video.avi")
+    save_video(output_video_frames, "./output_videos/output_video.avi")
 
 if __name__ == "__main__":
     main()
